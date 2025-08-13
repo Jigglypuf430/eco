@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HSC Economics — MCQ Practice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>html,body,#root{height:100%}</style>
+  </head>
+  <body class="min-h-screen bg-gray-50 text-gray-900">
+    <div id="root"></div>
+
+    <!-- React 18 UMD + Babel for JSX (no build step) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useEffect, useMemo, useState } = React;
+
+      const TOPICS = [
+        { id: "T1", title: "Topic 1 — The Global Economy" },
+        { id: "T2", title: "Topic 2 — Australia’s Place in the Global Economy" },
+        { id: "T3", title: "Topic 3 — Economic Issues" },
+        { id: "T4", title: "Topic 4 — Economic Policies & Management" },
+      ];
+
+      const QUESTIONS = [
+        // Topic 1
+        {
+          id: "T1Q1",
+          topic: "T1",
+          question: "Which best describes globalisation in the HSC syllabus?",
+          options: [
+            "Lower migration and reduced capital flows",
+            "Increased trade, financial flows, investment and technology transfer",
+            "Government ownership of production worldwide",
+            "Removal of all tariffs and quotas everywhere",
+          ],
+          correctIndex: 1,
+          feedback:
+            "Globalisation refers to growing economic integration via trade, finance, investment, technology and migration, not necessarily complete tariff removal or state ownership.",
+        },
+        {
+          id: "T1Q2",
+          topic: "T1",
+          question: "A key advantage of free trade is that it:",
+          options: [
+            "Raises all domestic prices permanently",
+            "Prevents specialisation based on comparative advantage",
+            "Allows countries to specialise and expand output",
+            "Eliminates current account deficits",
+          ],
+          correctIndex: 2,
+          feedback:
+            "Free trade supports specialisation according to comparative advantage, raising total output and potential living standards.",
+        },
+        {
+          id: "T1Q3",
+          topic: "T1",
+          question: "The WTO’s central role is to:",
+          options: [
+            "Set global interest rates",
+            "Administer trade rules and settle disputes",
+            "Lend to countries with balance‑of‑payments crises",
+            "Fund infrastructure in developing economies",
+          ],
+          correctIndex: 1,
+          feedback:
+            "The WTO provides a rules‑based system for trade and a forum for dispute settlement; it does not set interest rates or lend (that’s IMF/World Bank).",
+        },
+        {
+          id: "T1Q4",
+          topic: "T1",
+          question: "Which is NOT a protection measure?",
+          options: ["Tariffs", "Quotas", "Local content rules", "Lowering the cash rate to influence AUD"],
+          correctIndex: 3,
+          feedback:
+            "Protection includes tariffs/quotas/regulations. Changing the cash rate is monetary policy, not a trade barrier.",
+        },
+        {
+          id: "T1Q5",
+          topic: "T1",
+          question: "Gross World Product (GWP) refers to:",
+          options: [
+            "Value of production in the largest economy",
+            "Global sum of real output across all economies",
+            "The value of global exports",
+            "Global capital flows in a year",
+          ],
+          correctIndex: 1,
+          feedback:
+            "GWP is total world output (sum of real GDP across countries).",
+        },
+        {
+          id: "T1Q6",
+          topic: "T1",
+          question: "Synchronisation of the international business cycle is best explained by:",
+          options: [
+            "Uniform tax systems",
+            "Trade and financial linkages transmitting shocks",
+            "Identical monetary policies",
+            "Fixed exchange rates everywhere",
+          ],
+          correctIndex: 1,
+          feedback:
+            "Trade and capital flow linkages transmit demand/supply shocks and sentiment across borders, aligning cycles.",
+        },
+        // Topic 2
+        {
+          id: "T2Q7",
+          topic: "T2",
+          question: "Which item sits in Australia’s current account?",
+          options: [
+            "Net direct investment",
+            "Reserve assets",
+            "Net primary income (interest/dividends)",
+            "Financial derivatives (net)",
+          ],
+          correctIndex: 2,
+          feedback:
+            "Income flows (interest, dividends, profits) are recorded in the current account; asset transactions are in the capital & financial account.",
+        },
+        {
+          id: "T2Q8",
+          topic: "T2",
+          question: "The relationship between the current account and the capital & financial account is that:",
+          options: [
+            "Both must be in surplus",
+            "Their sum (plus errors & omissions) equals zero",
+            "They move independently with no accounting link",
+            "Only the current account affects the exchange rate",
+          ],
+          correctIndex: 1,
+          feedback:
+            "By double‑entry accounting, the current account balance is offset by the capital & financial account (plus a statistical discrepancy).",
+        },
+        {
+          id: "T2Q9",
+          topic: "T2",
+          question: "An appreciation of the AUD most likely:",
+          options: [
+            "Raises imported inflation",
+            "Improves export competitiveness",
+            "Reduces the AUD price of imports",
+            "Increases tradable‑sector employment",
+          ],
+          correctIndex: 2,
+          feedback:
+            "A higher AUD makes foreign goods cheaper in AUD terms, typically easing imported inflation but pressuring exporters.",
+        },
+        {
+          id: "T2Q10",
+          topic: "T2",
+          question: "The Trade Weighted Index (TWI) measures the AUD against:",
+          options: [
+            "The USD only",
+            "A basket of partner currencies weighted by trade shares",
+            "Gold and oil prices",
+            "A basket of domestic prices",
+          ],
+          correctIndex: 1,
+          feedback:
+            "The TWI is a weighted basket reflecting Australia’s major trading partners, not just the USD.",
+        },
+        {
+          id: "T2Q11",
+          topic: "T2",
+          question: "Under a largely floating system, the AUD is mainly determined by:",
+          options: [
+            "Government‑set parity",
+            "Market demand and supply for AUD",
+            "The annual Federal Budget balance",
+            "Australia’s minimum wage",
+          ],
+          correctIndex: 1,
+          feedback:
+            "The AUD floats with market forces (with occasional RBA presence).",
+        },
+        {
+          id: "T2Q12",
+          topic: "T2",
+          question: "A rise in Australia’s terms of trade means:",
+          options: [
+            "Export prices rise relative to import prices",
+            "Import prices rise relative to export prices",
+            "The current account must improve automatically",
+            "The TWI falls",
+          ],
+          correctIndex: 0,
+          feedback:
+            "Terms of trade = export price index / import price index; a rise means Px grows faster than Pm.",
+        },
+        // Topic 3
+        {
+          id: "T3Q13",
+          topic: "T3",
+          question: "With an MPC of 0.75, the simple multiplier (k) equals:",
+          options: ["2", "3", "4", "5"],
+          correctIndex: 2,
+          feedback: "k = 1/(1 − MPC) = 1/(1 − 0.75) = 4.",
+        },
+        {
+          id: "T3Q14",
+          topic: "T3",
+          question: "A school‑leaver searching for a first job is experiencing:",
+          options: [
+            "Structural unemployment",
+            "Frictional unemployment",
+            "Cyclical unemployment",
+            "Seasonal unemployment",
+          ],
+          correctIndex: 1,
+          feedback:
+            "Frictional unemployment covers short‑term job search/transition between roles or entry into the labour market.",
+        },
+        {
+          id: "T3Q15",
+          topic: "T3",
+          question: "Underlying (core) inflation aims to:",
+          options: [
+            "Include only traded goods prices",
+            "Strip out volatile/one‑off items to show persistent trends",
+            "Measure only services inflation",
+            "Equal headline CPI over time",
+          ],
+          correctIndex: 1,
+          feedback:
+            "Core measures remove temporary price noise (e.g., volatile fuel, fresh food) to reveal the persistent inflation trend.",
+        },
+        {
+          id: "T3Q16",
+          topic: "T3",
+          question: "A key external stability indicator is:",
+          options: [
+            "Budget deficit as % of GDP",
+            "Terms of trade only",
+            "Current account balance as % of GDP",
+            "Nominal GDP growth rate",
+          ],
+          correctIndex: 2,
+          feedback:
+            "External stability focuses on CAD/CAS sustainability, net foreign liabilities and ability to meet external obligations.",
+        },
+        {
+          id: "T3Q17",
+          topic: "T3",
+          question: "On inequality, a higher Gini coefficient indicates:",
+          options: [
+            "Greater equality of income distribution",
+            "Lower poverty",
+            "Greater inequality of income distribution",
+            "Higher average income",
+          ],
+          correctIndex: 2,
+          feedback:
+            "Gini ranges from 0 (equal) to 1 (unequal). A higher value implies more unequal distribution.",
+        },
+        {
+          id: "T3Q18",
+          topic: "T3",
+          question: "A carbon tax used to price pollution is an example of:",
+          options: [
+            "Public good provision",
+            "Market‑based policy internalising externalities",
+            "Free‑rider problem",
+            "Price ceiling",
+          ],
+          correctIndex: 1,
+          feedback:
+            "A tax equal to marginal external cost aligns private incentives with social costs, correcting a negative externality.",
+        },
+        // Topic 4
+        {
+          id: "T4Q19",
+          topic: "T4",
+          question: "A classic policy trade‑off is that using expansionary demand‑management to cut unemployment can:",
+          options: [
+            "Reduce inflationary pressure",
+            "Worsen external stability by lowering ToT",
+            "Increase inflationary pressure",
+            "Lower the NAIRU",
+          ],
+          correctIndex: 2,
+          feedback:
+            "Demand stimulus can push the economy beyond capacity, lifting inflation (short‑run Phillips curve trade‑off).",
+        },
+        {
+          id: "T4Q20",
+          topic: "T4",
+          question: "Australia’s primary monetary policy instrument is:",
+          options: [
+            "Open‑market operations’ impact on the cash rate target",
+            "Changes to company tax",
+            "Wage indexation",
+            "Import quotas",
+          ],
+          correctIndex: 0,
+          feedback:
+            "The RBA sets the cash rate target and implements it via open‑market operations in the money market.",
+        },
+        {
+          id: "T4Q21",
+          topic: "T4",
+          question: "Which is microeconomic reform?",
+          options: [
+            "Temporary cash‑rate cut",
+            "Budget‑funded cash transfers",
+            "Deregulating an industry to increase competition",
+            "Lifting government spending in a downturn",
+          ],
+          correctIndex: 2,
+          feedback:
+            "Micro reform changes industry/market structures and incentives to raise productivity and efficiency.",
+        },
+        {
+          id: "T4Q22",
+          topic: "T4",
+          question: "A common way to finance a budget deficit is to:",
+          options: [
+            "Raise the cash rate",
+            "Issue government securities (bonds)",
+            "Cut the TWI",
+            "Impose import quotas",
+          ],
+          correctIndex: 1,
+          feedback:
+            "The Commonwealth typically issues bonds to investors to fund deficits.",
+        },
+        {
+          id: "T4Q23",
+          topic: "T4",
+          question: "Regarding time lags, generally in Australia:",
+          options: [
+            "Discretionary fiscal policy has a shorter implementation lag than monetary policy",
+            "Monetary policy has a shorter implementation lag than discretionary fiscal policy",
+            "Both have identical implementation lags",
+            "Neither policy has lags",
+          ],
+          correctIndex: 1,
+          feedback:
+            "Monetary policy can be adjusted quickly; fiscal measures often require legislative and administrative lead times.",
+        },
+        {
+          id: "T4Q24",
+          topic: "T4",
+          question: "Elements of the national industrial relations system include:",
+          options: [
+            "Only enterprise bargaining",
+            "Minimum employment standards, awards, minimum wages and enterprise agreements",
+            "Centralised wage indexation only",
+            "Individual contracts only",
+          ],
+          correctIndex: 1,
+          feedback:
+            "IR in Australia includes the NES, modern awards, minimum wages and enterprise agreements under the national framework.",
+        },
+      ];
+
+      function shuffled(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function lsKey(topic) { return `hsc-econ-quiz:${topic}`; }
+
+      function initialSaveState(topic, ids) {
+        const answers = {}; const checked = {};
+        ids.forEach(id => { answers[id] = null; checked[id] = false; });
+        return { orderIds: ids, currentIndex: 0, answers, checked, score: 0 };
+      }
+
+      function toCsv(rows) {
+        const esc = (s) => '"' + String(s).replace(/"/g, '""') + '"';
+        return rows.map(r => r.map(esc).join(',')).join('\n');
+      }
+
+      function HscEconomicsQuiz() {
+        const [topic, setTopic] = useState("T1");
+        const topicQuestions = useMemo(() => QUESTIONS.filter(q => q.topic === topic), [topic]);
+
+        const [state, setState] = useState(() => {
+          const fromLs = localStorage.getItem(lsKey("T1"));
+          const ids = shuffled(QUESTIONS.filter(q => q.topic === "T1").map(q => q.id));
+          return fromLs ? JSON.parse(fromLs) : initialSaveState("T1", ids);
+        });
+
+        useEffect(() => {
+          const fromLs = localStorage.getItem(lsKey(topic));
+          const ids = shuffled(topicQuestions.map(q => q.id));
+          setState(fromLs ? JSON.parse(fromLs) : initialSaveState(topic, ids));
+        }, [topic]);
+
+        useEffect(() => {
+          localStorage.setItem(lsKey(topic), JSON.stringify(state));
+        }, [topic, state]);
+
+        const ordered = useMemo(() => {
+          const byId = Object.fromEntries(topicQuestions.map(q => [q.id, q]));
+          return state.orderIds.map(id => byId[id]).filter(Boolean);
+        }, [topicQuestions, state.orderIds]);
+
+        const current = ordered[state.currentIndex];
+        const total = ordered.length;
+        const answeredCount = Object.values(state.answers).filter(v => v !== null).length;
+
+        function selectOption(qid, optIndex) {
+          setState(s => ({ ...s, answers: { ...s.answers, [qid]: optIndex } }));
+        }
+
+        function checkAnswer(q) {
+          const user = state.answers[q.id];
+          if (user === null || state.checked[q.id]) return;
+          const isCorrect = user === q.correctIndex;
+          setState(s => ({
+            ...s,
+            checked: { ...s.checked, [q.id]: true },
+            score: s.score + (isCorrect ? 1 : 0),
+          }));
+        }
+
+        function nextQuestion() {
+          setState(s => ({ ...s, currentIndex: Math.min(s.currentIndex + 1, total - 1) }));
+        }
+        function prevQuestion() {
+          setState(s => ({ ...s, currentIndex: Math.max(s.currentIndex - 1, 0) }));
+        }
+        function resetTopic(shuffle = true) {
+          const ids = (shuffle ? shuffled : (x) => x)(topicQuestions.map(q => q.id));
+          const fresh = initialSaveState(topic, ids);
+          setState(fresh);
+          localStorage.setItem(lsKey(topic), JSON.stringify(fresh));
+        }
+        function exportAnkiCsv() {
+          const rows = [];
+          for (const q of ordered) {
+            const opts = q.options.map((o, i) => String.fromCharCode(65+i)+'. '+o).join(' | ');
+            const correct = String.fromCharCode(65 + q.correctIndex);
+            rows.push([q.question, opts, correct, q.feedback]);
+          }
+          const header = ["question","options","correct","feedback"];
+          const csv = toCsv([header, ...rows]);
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = `${topic}-hsc-economics-quiz.csv`; a.click();
+          URL.revokeObjectURL(url);
+        }
+
+        return (
+          <div className="min-h-screen">
+            <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b">
+              <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+                <h1 className="text-xl md:text-2xl font-semibold tracking-tight">HSC Economics — MCQ Practice</h1>
+                <div className="flex items-center gap-2">
+                  <select aria-label="Select topic" value={topic} onChange={(e)=>setTopic(e.target.value)} className="rounded-xl border px-3 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    {TOPICS.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                  </select>
+                  <button onClick={()=>resetTopic(true)} className="rounded-xl border px-3 py-2 bg-white hover:bg-gray-100 shadow-sm" title="Reset and shuffle">Reset ♻️</button>
+                  <button onClick={exportAnkiCsv} className="rounded-xl border px-3 py-2 bg-white hover:bg-gray-100 shadow-sm" title="Export current topic to Anki CSV">Export CSV</button>
+                </div>
+              </div>
+            </header>
+
+            <main className="max-w-3xl mx-auto px-4 py-6">
+              <div className="mb-6">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-medium">{TOPICS.find(t=>t.id===topic)?.title}</h2>
+                    <p className="text-sm text-gray-600">{answeredCount}/{total} answered • Score: <span className="font-semibold">{state.score}</span></p>
+                  </div>
+                  <div className="text-sm text-gray-600">Question {state.currentIndex + 1} of {total}</div>
+                </div>
+                <div className="w-full h-2 bg-gray-200 rounded-full mt-2 overflow-hidden">
+                  <div className="h-full bg-blue-600 transition-all" style={{width: `${(answeredCount/Math.max(total,1))*100}%`}} />
+                </div>
+              </div>
+
+              {current ? (
+                <div className="bg-white rounded-2xl shadow-sm border p-5">
+                  <div className="mb-4">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">{TOPICS.find(t=>t.id===topic)?.id}</span>
+                  </div>
+                  <h3 className="text-base md:text-lg font-semibold leading-snug mb-4">{current.question}</h3>
+
+                  <fieldset className="space-y-2">
+                    <legend className="sr-only">Answer choices</legend>
+                    {current.options.map((opt,i)=>{
+                      const sel = state.answers[current.id];
+                      const wasChecked = state.checked[current.id];
+                      const isCorrect = i === current.correctIndex;
+                      const isChosen = sel === i;
+                      const showRight = wasChecked && isCorrect;
+                      const showWrong = wasChecked && isChosen && !isCorrect;
+                      return (
+                        <label key={i} className={["flex items-start gap-3 rounded-xl border p-3 cursor-pointer transition", isChosen?"border-blue-500 bg-blue-50":"hover:bg-gray-50", showRight?"border-green-500 bg-green-50":"", showWrong?"border-red-500 bg-red-50":""].join(" ") }>
+                          <input type="radio" name={`q-${current.id}`} className="mt-1" checked={!!isChosen} onChange={()=>selectOption(current.id,i)} />
+                          <div className="flex-1">
+                            <div className="font-medium">{String.fromCharCode(65+i)}. {opt}</div>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </fieldset>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <button onClick={()=>checkAnswer(current)} disabled={state.checked[current.id] || state.answers[current.id] === null} className="rounded-xl bg-blue-600 text-white px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                      {state.checked[current.id] ? "Checked" : "Check answer"}
+                    </button>
+                    <button onClick={prevQuestion} className="rounded-xl border px-4 py-2 bg-white hover:bg-gray-50">← Prev</button>
+                    <button onClick={nextQuestion} className="rounded-xl border px-4 py-2 bg-white hover:bg-gray-50">Next →</button>
+                  </div>
+
+                  {state.checked[current.id] && (
+                    <div className="mt-4 p-4 rounded-xl border bg-gray-50 text-gray-800">
+                      <div className="font-semibold mb-1">{state.answers[current.id] === current.correctIndex ? "Correct ✅" : "Not quite ❌"}</div>
+                      <p className="text-sm leading-relaxed">{current.feedback}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-gray-600">No questions for this topic yet.</div>
+              )}
+
+              {answeredCount === total && (
+                <div className="mt-6 bg-white rounded-2xl shadow-sm border p-5">
+                  <h4 className="text-lg font-semibold mb-1">Topic complete</h4>
+                  <p className="text-gray-700">You answered {state.score} out of {total} correctly.</p>
+                  <div className="mt-3 flex gap-2">
+                    <button onClick={()=>resetTopic(false)} className="rounded-xl border px-4 py-2 bg-white hover:bg-gray-50">Review (keep order)</button>
+                    <button onClick={()=>resetTopic(true)} className="rounded-xl border px-4 py-2 bg-white hover:bg-gray-50">Retry (shuffle)</button>
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-6 grid grid-cols-12 gap-2">
+                {ordered.map((q,idx)=>{
+                  const done = state.answers[q.id] !== null;
+                  const good = state.checked[q.id] && state.answers[q.id] === q.correctIndex;
+                  return (
+                    <button key={q.id} onClick={()=>setState(s=>({...s, currentIndex: idx}))} className={["h-9 rounded-lg border text-sm", idx===state.currentIndex?"bg-blue-600 text-white border-blue-600":"bg-white hover:bg-gray-50", done ? (good?"border-green-500":"border-yellow-400") : ""].join(" ")} title={`Q${idx+1}`}>
+                      {idx+1}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <footer className="mt-10 text-xs text-gray-500">
+                <p>
+                  Built for HSC Economics practice. Topics and phrasing align with the Stage 6 course structure. This tool is for study revision and does not replace official syllabus documents.
+                </p>
+              </footer>
+            </main>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<HscEconomicsQuiz />);
+    </script>
+  </body>
+</html>
